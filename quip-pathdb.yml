@@ -15,14 +15,15 @@ services:
       - ./images/:/data/images/
   back:
     build:
-      context: "https://github.com/camicroscope/caracal.git#v3.9.11"
+      context: "https://github.com/camicroscope/caracal.git#v3.9.10"
       args:
-        viewer: "v3.9.11"
+        viewer: "v3.9.10"
     depends_on:
       - "mongo"
     ports:
       - "4010:4010"
     container_name: ca-security
+    restart: unless-stopped
     volumes:
       - ./keys/:/src/keys/
       - ./config/routes.json:/src/routes.json
@@ -40,7 +41,7 @@ services:
         viewer: "v3.9.10"
     container_name: quip-pathdb
     restart: unless-stopped
-    ports: ["443:443","80:80"]
+    ports: ["80:80"]
     volumes:
       - ./data:/data/
       - ./images/:/data/pathdb/files/wsi
@@ -52,17 +53,20 @@ services:
   imageloader:
     build: "https://github.com/SBU-BMI/ImageLoader.git#2.1.1"
     container_name: quip-imageloader
+    restart: unless-stopped
     volumes:
       - ./data:/data/
       - ./images:/data/images
   segloader:
     build: "https://github.com/SBU-BMI/SegmentationLoader.git#2.1"
     container_name: quip-segloader
+    restart: unless-stopped
     volumes:
       - ./data:/data
   heatmaploader:
     build: "https://github.com/SBU-BMI/uploadHeatmaps.git#v1.5.4"
     container_name: quip-hmloader
+    restart: unless-stopped
     volumes:
       - ./data:/mnt/data/
     environment:
